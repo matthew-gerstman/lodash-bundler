@@ -1,5 +1,7 @@
+var webpack = require("webpack");
+
 module.exports = {
-  entry: "./src/index.ts",
+  entry: { app: "./src/index.ts", vendor: ["lodash-es"] },
   output: {
     filename: "bundle.js",
     path: __dirname + "/dist"
@@ -7,7 +9,6 @@ module.exports = {
 
   // Enable sourcemaps for debugging webpack's output.
   devtool: "source-map",
-
   resolve: {
     // Add '.ts' and '.tsx' as resolvable extensions.
     extensions: [".ts", ".tsx", ".js", ".json"]
@@ -21,5 +22,13 @@ module.exports = {
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
       { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
     ]
-  }
+  },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "vendor",
+      filename: "vendor.bundle.js",
+      minChunks: Infinity
+    })
+  ],
+  target: "node"
 };
